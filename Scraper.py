@@ -15,10 +15,12 @@ Known issues:
 
 Notes:
     1. Although the script only uses publiclly available information, 
-    PRAW's call to the reddit API requires a reddit login (see line 44).
+    PRAW's call to the reddit API requires a reddit login (see line 46).
     2. Reddit API limits number of calls (1 per second IIRC). 
     For a large thread (e.g., 1000s of comments) script execution time may therefore be c.1 hour.
-    3. Does not extract comment creation date (or other properties), which might be useful. 
+    3. Because of this bottleneck, the entire data object is written to a pickle before anything is discarded. 
+    This speeds up testing etc.
+    4. Does not extract comment creation date (or other properties), which might be useful. 
 """
 
 # Dependencies
@@ -44,9 +46,20 @@ r = praw.Reddit('Comment Scraper 1.0 by u/_Daimon_ see '
 r.login('USERNAME', 'PASSWORD', disable_warning=True) # change these to your login details
 submission = r.get_submission(submission_id='4e8oip') # unique ID for the submission
 submission.replace_more_comments(limit=None, threshold=0)  # all comments, not just first page
-forest_comments = submission.comments  # Get comments tree
+
+# Save object to pickle
+output = open('scraped_data.pkl', 'wb')
+pickle.dump(submission, output, -1)
+output.close()
+
+## Load object from pickle
+#pkl_file = open('scraped_data.pkl', 'rb')
+#submission = pickle.load(pkl_file)
+##pprint.pprint(submission)
+#pkl_file.close()
 
 # Extract first level comments only
+forest_comments = submission.comments  # get comments tree
 already_done = set()
 top_level_comments = []
 for comment in forest_comments: 
