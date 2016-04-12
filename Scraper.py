@@ -44,7 +44,7 @@ r = praw.Reddit('Comment Scraper 1.0 by u/_Daimon_ see '
     'https://praw.readthedocs.org/en/latest/'
     'pages/comment_parsing.html')
 r.login('USERNAME', 'PASSWORD', disable_warning=True) # change these to your login details
-submission = r.get_submission(submission_id='4e8oip') # unique ID for the submission
+submission = r.get_submission(submission_id='UNIQUE_ID_HERE') # UNIQUE ID FOR THE THREAD GOES HERE - GET FROM THE URL
 submission.replace_more_comments(limit=None, threshold=0)  # all comments, not just first page
 
 # Save object to pickle
