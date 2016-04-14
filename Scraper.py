@@ -15,7 +15,7 @@ Known issues:
 
 Notes:
     1. Although the script only uses publiclly available information, 
-    PRAW's call to the reddit API requires a reddit login (see line 46).
+    PRAW's call to the reddit API requires a reddit login (see line 47).
     2. Reddit API limits number of calls (1 per second IIRC). 
     For a large thread (e.g., 1000s of comments) script execution time may therefore be c.1 hour.
     3. Because of this bottleneck, the entire data object is written to a pickle before anything is discarded. 
@@ -28,6 +28,7 @@ import praw
 import csv
 import os
 import sys
+import pickle
 
 # Set encoding to utf-8 rather than ascii, as is default for python 2.
 # This avoids ascii errors on csv write.
