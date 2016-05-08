@@ -44,33 +44,53 @@ os.chdir(directory_name)
 r = praw.Reddit('Comment Scraper 1.0 by u/_Daimon_ see '
     'https://praw.readthedocs.org/en/latest/'
     'pages/comment_parsing.html')
-r.login('USERNAME', 'PASSWORD', disable_warning=True) # change these to your login details
-submission = r.get_submission(submission_id='UNIQUE_ID_HERE') # UNIQUE ID FOR THE THREAD GOES HERE - GET FROM THE URL
-submission.replace_more_comments(limit=None, threshold=0)  # all comments, not just first page
+#r.login('USERNAME', 'PASSWORD', disable_warning=True) # change these to your login details
 
-# Save object to pickle
-output = open('scraped_data.pkl', 'wb')
-pickle.dump(submission, output, -1)
-output.close()
 
-## Load object from pickle
-#pkl_file = open('scraped_data.pkl', 'rb')
-#submission = pickle.load(pkl_file)
-##pprint.pprint(submission)
-#pkl_file.close()
 
-# Extract first level comments only
-forest_comments = submission.comments  # get comments tree
-already_done = set()
-top_level_comments = []
-for comment in forest_comments: 
-    if not hasattr(comment, 'body'):  # only comments with body text
-        continue
-    if comment.is_root:  # only first level comments
-        if comment.id not in already_done:
-            already_done.add(comment.id)  # add it to the list of checked comments
-            top_level_comments.append([comment.body])  # append to list for saving
-            #print(comment.body)
+def get_submission_comments(uniq_id):
+    submission = r.get_submission(submission_id=uniq_id)  # UNIQUE ID FOR THE THREAD GOES HERE - GET FROM THE URL
+    submission.replace_more_comments(limit=None, threshold=0)  # all comments, not just first page
+
+    # Save object to pickle
+    output = open('scraped_data.pkl', 'wb')
+    pickle.dump(submission, output, -1)
+    output.close()
+
+    ## Load object from pickle
+    # pkl_file = open('scraped_data.pkl', 'rb')
+    # submission = pickle.load(pkl_file)
+    ##pprint.pprint(submission)
+    # pkl_file.close()
+
+    # Extract first level comments only
+    forest_comments = submission.comments  # get comments tree
+    already_done = set()
+    top_level_comments = []
+    for comment in forest_comments:
+        if not hasattr(comment, 'body'):  # only comments with body text
+            continue
+        if comment.is_root:  # only first level comments
+            if comment.id not in already_done:
+                already_done.add(comment.id)  # add it to the list of checked comments
+                top_level_comments.append([comment.body])  # append to list for saving
+                # print(comment.body)
+    return top_level_comments
+
+def get_subreddit_comments(uniq_id):
+    limit = int(sys.argv[2]) if len(sys.argv) > 2 else 1000
+    comStream = praw.helpers.comment_stream(r, uniq_id[3:], limit=limit) # Get the comment string
+    comments = map(lambda _: [next(comStream).__str__()], range(limit)) # Get the raw string of each comment obj
+    return list(comments) # Convert to list if running on Python3
+
+uniq_id = None # Set unique id or subreddit
+if len(sys.argv) > 1:
+    uniq_id = sys.argv[1]
+
+if uniq_id[:3] == '/r/':
+    top_level_comments = get_subreddit_comments(uniq_id)
+else:
+    top_level_comments = get_submission_comments(uniq_id)
 
 # Save comments to disk
 with open("output.csv", "wb") as output:
