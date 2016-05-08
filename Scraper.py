@@ -44,7 +44,7 @@ os.chdir(directory_name)
 r = praw.Reddit('Comment Scraper 1.0 by u/_Daimon_ see '
     'https://praw.readthedocs.org/en/latest/'
     'pages/comment_parsing.html')
-#r.login('USERNAME', 'PASSWORD', disable_warning=True) # change these to your login details
+r.login('USERNAME', 'PASSWORD', disable_warning=True) # change these to your login details
 
 
 
