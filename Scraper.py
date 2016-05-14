@@ -8,7 +8,7 @@ Description:
 
 Author:
     Copyright (c) Ian Hussey 2016 (ian.hussey@ugent.be) 
-    Released under the MIT liscence.
+    Released under the GPLv3+ license.
 
 Known issues:
     None. 
