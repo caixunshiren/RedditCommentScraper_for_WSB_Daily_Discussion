@@ -94,6 +94,6 @@ else:
     top_level_comments = get_submission_comments(uniq_id)
 
 # Save comments to disk
-with open(cfg.output_file_csv, "wb") as output:
+with open(cfg.output_csv_file, "wb") as output:
     writer = csv.writer(output)
     writer.writerows(top_level_comments)
