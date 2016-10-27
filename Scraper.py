@@ -47,7 +47,14 @@ r = praw.Reddit('Comment Scraper 1.0 by u/_Daimon_ see '
     'pages/comment_parsing.html')
 r.login(cfg.username, cfg.password, disable_warning=True)
 
+# override this in config to decide which attributes to save from a comment object
+def default_comment_to_list(comment):
+    return [comment.body]
 
+if hasattr(cfg, "comment_to_list"):
+    comment_to_list = cfg.comment_to_list
+else:
+    comment_to_list = default_comment_to_list
 
 def get_submission_comments(uniq_id):
     submission = r.get_submission(submission_id=uniq_id)  # UNIQUE ID FOR THE THREAD GOES HERE - GET FROM THE URL
@@ -74,7 +81,7 @@ def get_submission_comments(uniq_id):
         if comment.is_root:  # only first level comments
             if comment.id not in already_done:
                 already_done.add(comment.id)  # add it to the list of checked comments
-                top_level_comments.append([comment.body])  # append to list for saving
+                top_level_comments.append(comment_to_list(comment))  # append to list for saving
                 # print(comment.body)
     return top_level_comments
 
@@ -97,3 +104,4 @@ else:
 with open(cfg.output_csv_file, "wb") as output:
     writer = csv.writer(output)
     writer.writerows(top_level_comments)
+
