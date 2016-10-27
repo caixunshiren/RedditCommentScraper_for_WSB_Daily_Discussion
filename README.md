@@ -23,6 +23,5 @@ None.
 ## Notes
 1. Although the script only uses publiclly available information, PRAW's call to the reddit API requires a reddit login (see line 44).
 2. Reddit API limits number of calls (1 per second IIRC). For a large thread (e.g., 1000s of comments) script execution time may therefore be c.1 hour.
-3. Does not extract comment creation date (or other properties), which might be useful. 
-
+3. To configure, `cp Scraper_config.py.example Scraper_config.py` and edit that file. To extract more comment fields such as author and creation date, override the `comment_to_list` function in the config file.
 
