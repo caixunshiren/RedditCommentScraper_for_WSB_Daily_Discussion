@@ -66,7 +66,7 @@ def get_submission_comments(uniq_id):
     output.close()
 
     ## Load object from pickle
-    # pkl_file = open('scraped_data.pkl', 'rb')
+    # pkl_file = open(cfg.output_file, 'rb')
     # submission = pickle.load(pkl_file)
     ##pprint.pprint(submission)
     # pkl_file.close()
