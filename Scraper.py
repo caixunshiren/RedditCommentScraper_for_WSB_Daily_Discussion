@@ -29,6 +29,7 @@ import csv
 import os
 import sys
 import pickle
+import Scraper_config as cfg
 
 # Set encoding to utf-8 rather than ascii, as is default for python 2.
 # This avoids ascii errors on csv write.
@@ -44,7 +45,7 @@ os.chdir(directory_name)
 r = praw.Reddit('Comment Scraper 1.0 by u/_Daimon_ see '
     'https://praw.readthedocs.org/en/latest/'
     'pages/comment_parsing.html')
-r.login('USERNAME', 'PASSWORD', disable_warning=True) # change these to your login details
+r.login(cfg.username, cfg.password, disable_warning=True)
 
 
 
@@ -53,7 +54,7 @@ def get_submission_comments(uniq_id):
     submission.replace_more_comments(limit=None, threshold=0)  # all comments, not just first page
 
     # Save object to pickle
-    output = open('scraped_data.pkl', 'wb')
+    output = open(cfg.output_file, 'wb')
     pickle.dump(submission, output, -1)
     output.close()
 
@@ -83,7 +84,7 @@ def get_subreddit_comments(uniq_id):
     comments = map(lambda _: [next(comStream).__str__()], range(limit)) # Get the raw string of each comment obj
     return list(comments) # Convert to list if running on Python3
 
-uniq_id = None # Set unique id or subreddit
+uniq_id = cfg.uniq_id
 if len(sys.argv) > 1:
     uniq_id = sys.argv[1]
 
@@ -93,6 +94,6 @@ else:
     top_level_comments = get_submission_comments(uniq_id)
 
 # Save comments to disk
-with open("output.csv", "wb") as output:
+with open(cfg.output_file_csv, "wb") as output:
     writer = csv.writer(output)
     writer.writerows(top_level_comments)
