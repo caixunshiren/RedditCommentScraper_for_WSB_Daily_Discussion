@@ -5,7 +5,7 @@ Description:
     config for the Scraper.py
 """
 
-# create a reddit personal use script and enter the credentials here
+# create a reddit personal use script and enter the credentials here https://ssl.reddit.com/prefs/apps/
 client_id = "CLIENT ID"
 client_secret = "CLIENT SECRET"
 bot_username = "BOT USERNAME"
