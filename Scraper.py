@@ -25,16 +25,11 @@ Notes:
 
 # Dependencies
 import praw
-import csv
 import os
+import csv
 import sys
 import pickle
 import Scraper_config as cfg
-
-# Set encoding to utf-8 rather than ascii, as is default for python 2.
-# This avoids ascii errors on csv write.
-reload(sys)
-sys.setdefaultencoding('utf-8') 
 
 # Change directory to that of the current script
 absolute_path = os.path.abspath(__file__)
@@ -42,10 +37,7 @@ directory_name = os.path.dirname(absolute_path)
 os.chdir(directory_name)
 
 # Acquire comments via reddit API
-r = praw.Reddit('Comment Scraper 1.0 by u/_Daimon_ see '
-    'https://praw.readthedocs.org/en/latest/'
-    'pages/comment_parsing.html')
-r.login(cfg.username, cfg.password, disable_warning=True)
+r = praw.Reddit(client_id=cfg.client_id, client_secret=cfg.client_secret, user_agent=cfg.bot_username)
 
 # override this in config to decide which attributes to save from a comment object
 def default_comment_to_list(comment):
@@ -57,8 +49,8 @@ else:
     comment_to_list = default_comment_to_list
 
 def get_submission_comments(uniq_id):
-    submission = r.get_submission(submission_id=uniq_id)  # UNIQUE ID FOR THE THREAD GOES HERE - GET FROM THE URL
-    submission.replace_more_comments(limit=None, threshold=0)  # all comments, not just first page
+    submission = r.submission(id=uniq_id)  # UNIQUE ID FOR THE THREAD GOES HERE - GET FROM THE URL
+    submission.comments.replace_more(limit=None, threshold=0)  # all comments, not just first page
 
     # Save object to pickle
     output = open(cfg.output_file, 'wb')
@@ -81,8 +73,7 @@ def get_submission_comments(uniq_id):
         if comment.is_root:  # only first level comments
             if comment.id not in already_done:
                 already_done.add(comment.id)  # add it to the list of checked comments
-                top_level_comments.append(comment_to_list(comment))  # append to list for saving
-                # print(comment.body)
+                top_level_comments.append(comment_to_list(comment.body))  # append to list for saving
     return top_level_comments
 
 def get_subreddit_comments(uniq_id):
@@ -101,7 +92,7 @@ else:
     top_level_comments = get_submission_comments(uniq_id)
 
 # Save comments to disk
-with open(cfg.output_csv_file, "wb") as output:
+with open(cfg.output_csv_file, "w", encoding="utf-8") as output:
     writer = csv.writer(output)
     writer.writerows(top_level_comments)
 

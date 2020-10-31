@@ -4,16 +4,18 @@
 Description:
     config for the Scraper.py
 """
-# change these to your login details
-username = "USERNAME"
-password = "PASSWORD"
+
+# create a reddit personal use script and enter the credentials here
+client_id = "CLIENT ID"
+client_secret = "CLIENT SECRET"
+bot_username = "BOT USERNAME"
 
 output_file = "scraped_data.pkl"
 output_csv_file = "output.csv"
 
 # UNIQUE ID FOR THE THREAD GOES HERE - GET FROM THE URL
 # Set unique id or subreddit
-uniq_id = None 
+uniq_id = None
 
 ## override this in config to decide which attributes to save from a comment object
 #def comment_to_list(comment):
