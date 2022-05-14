@@ -4,9 +4,13 @@ import pickle
 file = open('scraped_data.pkl', 'rb')
 
 # dump information to that file
-data = pickle.load(file)
+submission = pickle.load(file)
 
 # close the file
 file.close()
 
-print(data)
+counter = 0
+for comment in submission.comments:
+    counter+=1
+
+print(submission.num_comments)
