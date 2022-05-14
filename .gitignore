@@ -2,4 +2,5 @@ Scraper_config.py
 scraped_data.pkl
 output.csv
 .idea/
-
+venv/
+__pycache__/
