@@ -4,3 +4,4 @@ output.csv
 .idea/
 venv/
 __pycache__/
+*.csv
